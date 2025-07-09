@@ -1,0 +1,7 @@
+# use `conda install --yes --file requirements.txt`
+streamlit
+biopython
+pandas
+plotly
+py3Dmol
+networkx

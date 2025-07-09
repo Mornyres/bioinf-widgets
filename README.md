@@ -1,1 +1,1 @@
-# airmed
+# proteomics widget
