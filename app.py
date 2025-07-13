@@ -7,14 +7,14 @@ from io import StringIO
 
 from utils.fasta import fasta_record
 from utils.plot import create_composition_plot
-from utils.structure import show_structure_file
+from utils.pdb import PDB
 
 st.title("Basic proteomics widget")
 
-option = st.sidebar.selectbox("Choose analysis type", ["Protein sequence proteomics (FASTA)", "Protein Visualization (PDB)"])
+#option = st.sidebar.selectbox("Choose analysis type", ["Protein sequence proteomics (FASTA)", "Protein Visualization (PDB)"])
 
-#with st.expander("FASTA"):
-if option == "Protein sequence proteomics (FASTA)":
+with st.expander("Protein sequence proteomics (FASTA)"):
+#if option == "Protein sequence proteomics (FASTA)":
     # Upload FASTA
     
     fasta_file = st.file_uploader("Upload a protein FASTA file", type=["fasta", "fa"])
@@ -39,19 +39,21 @@ if option == "Protein sequence proteomics (FASTA)":
         i = i + 1
 
 
-
-elif option == "Protein Visualization (PDB)":
+with st.expander("Protein Visualization (PDB)"):
+#elif option == "Protein Visualization (PDB)":
 
     pdb_file = st.file_uploader("Upload a protein PDB file", type=["pdb","ent"])
 
     if pdb_file is not None:
         # Structure viewer
         st.subheader("Protein Structure Viewer")
-        pdb = pdb_file.read().decode("utf-8")
+        pdb = PDB(file=pdb_file) 
         
 
     else:
         st.subheader("Protein Structure Viewer (example PDB file)")
-        pdb = open("./examples/pdb1aoi.ent", 'r').read()
-    
-    show_structure_file(pdb)
+        pdb_filepath = "./examples/pdb1aoi.ent"
+        pdb = PDB(filepath=pdb_filepath)   
+
+    st.write(pdb.format())
+    pdb.show_structure_file()
