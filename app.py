@@ -2,41 +2,38 @@
 from Bio import SeqIO
 #import networkx as nx
 import streamlit as st
-from io import StringIO
 
 
-from utils.fasta import fasta_record
-from utils.plot import create_composition_plot
+from utils.fasta import fasta_file
 from utils.pdb import PDB
+
 
 st.title("Basic proteomics widget")
 
 #option = st.sidebar.selectbox("Choose analysis type", ["Protein sequence proteomics (FASTA)", "Protein Visualization (PDB)"])
+st.markdown(
+    "Just a small little experiment with Streamlit and some bioinformatics tools in Python."
+)
+
 
 with st.expander("Protein sequence proteomics (FASTA)"):
 #if option == "Protein sequence proteomics (FASTA)":
     # Upload FASTA
     
-    fasta_file = st.file_uploader("Upload a protein FASTA file", type=["fasta", "fa"])
+    fasta_file_input = st.file_uploader("Upload a protein FASTA file", type=["fasta", "fa"])
 
-    if fasta_file is not None:
-        input_string = StringIO(fasta_file.getvalue().decode("utf-8"))
+    if fasta_file_input is not None:
+        fasta_input = fasta_file_input
         st.subheader("Sequence Information")
+        fasta_file = fasta_file(file=fasta_input)
 
     else:
-        input_string = "./examples/crab_anapl.fasta"
+        fasta_input = "./examples/crab_anapl.fasta"
         st.subheader("Sequence Information (example file)")
+        fasta_file = fasta_file(file_handler=fasta_input)
 
+    fasta_file.format_summary(summary_only=False, exclude=[])
 
-    i = 1
-    for record_text in SeqIO.parse(input_string, 'fasta'):
-        st.subheader(f"Record {i}")
-        record = fasta_record(record_text)
-        
-        st.write(record.format())
-
-        st.plotly_chart(create_composition_plot(dict(record.aa_composition)))
-        i = i + 1
 
 
 with st.expander("Protein Visualization (PDB)"):
@@ -49,7 +46,6 @@ with st.expander("Protein Visualization (PDB)"):
         st.subheader("Protein Structure Viewer")
         pdb = PDB(file=pdb_file) 
         
-
     else:
         st.subheader("Protein Structure Viewer (example PDB file)")
         pdb_filepath = "./examples/pdb1aoi.ent"

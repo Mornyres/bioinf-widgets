@@ -15,7 +15,8 @@ class PDB():
                 self.pdb_content = f.read()
 
         elif file is not None:
-            self.pdb_content = file
+            self.pdb_content = file.getvalue().decode("utf-8")
+            self.file_handler = StringIO(file.getvalue().decode("utf-8"))
 
         elif id is not None:
             None
@@ -24,6 +25,7 @@ class PDB():
             raise ValueError("Provide either PDB ID or .pdb file")
         
         parser = PDBParser()
+        
         
         self.structure = parser.get_structure('protein_id', self.file_handler)
         
